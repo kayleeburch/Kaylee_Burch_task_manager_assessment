@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from .routes import bp  # Import the Blueprint
+from flask_migrate import Migrate
 
 db = SQLAlchemy()
 
@@ -12,10 +12,14 @@ def create_app():
     
     CORS(app)
     db.init_app(app)
+    
+    migrate = Migrate(app, db)
 
     with app.app_context():
         db.create_all()
-        
+    
+    # Move the import here
+    from .routes import bp  # Import the Blueprint here
     app.register_blueprint(bp)  # Register the Blueprint with the app instance
 
     return app
