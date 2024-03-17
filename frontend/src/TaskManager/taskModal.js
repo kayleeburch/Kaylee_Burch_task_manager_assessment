@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
+import axios from "axios";
 
-export default function EditTaskModal({ task, show, handleClose }) {
+export default function TaskModal({ task, show, handleClose }) {
   const [editedTask, setEditedTask] = useState({});
 
   useEffect(() => {
@@ -16,12 +17,19 @@ export default function EditTaskModal({ task, show, handleClose }) {
     });
   };
 
-  const handleSave = () => {};
+  const handleSave = async () => {
+    if (!task?.id) {
+      await axios.post("http://localhost:3001/tasks");
+    } else {
+      // Update task
+      console.log("Update task: ", editedTask);
+    }
+  };
 
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Edit Task - {task?.title}</Modal.Title>
+        <Modal.Title>{task?.id ? `Edit Task - ${task?.title}` : "Create New Task"}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>

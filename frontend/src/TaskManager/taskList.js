@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ListGroup, Form } from "react-bootstrap";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import EditTaskModal from "./editTaskModal";
+import EditTaskModal from "./taskModal";
 import DeleteTaskModal from "./deleteTaskModal";
 
 const TaskList = ({ completed }) => {
