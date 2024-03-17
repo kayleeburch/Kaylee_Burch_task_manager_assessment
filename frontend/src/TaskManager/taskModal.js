@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 import axios from "axios";
 
-export default function TaskModal({ task, show, handleClose }) {
+export default function TaskModal({ task, show, handleClose, setAlert }) {
   const [editedTask, setEditedTask] = useState({});
 
   useEffect(() => {
@@ -19,10 +19,27 @@ export default function TaskModal({ task, show, handleClose }) {
 
   const handleSave = async () => {
     if (!task?.id) {
-      await axios.post("http://localhost:3001/tasks");
+      try {
+        const response = await axios.post("http://127.0.0.1:5000/tasks", editedTask);
+        handleClose();
+        setAlert({ variant: "success", message: "Task created successfully!" });
+      } catch (error) {
+        setAlert({
+          variant: "danger",
+          message: "There was an error creating the task. Please try again.",
+        });
+      }
     } else {
-      // Update task
-      console.log("Update task: ", editedTask);
+      try {
+        const response = await axios.put(`http://127.0.0.1:5000/tasks/${task.id}`, editedTask);
+        handleClose();
+        setAlert({ variant: "success", message: "Task updated successfully!" });
+      } catch (error) {
+        setAlert({
+          variant: "danger",
+          message: "There was an error updating the task. Please try again.",
+        });
+      }
     }
   };
 

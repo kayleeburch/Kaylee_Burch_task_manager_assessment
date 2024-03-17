@@ -1,28 +1,31 @@
-import { useState, useEffect } from "react";
-import { ListGroup, Form } from "react-bootstrap";
+import { useState } from "react";
+import axios from "axios";
+import { Row, Col, ListGroup, Form, Button } from "react-bootstrap";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import EditTaskModal from "./taskModal";
+import CreateTaskModal from "./taskModal";
 import DeleteTaskModal from "./deleteTaskModal";
 
-const TaskList = ({ completed }) => {
-  const [tasks, setTasks] = useState([
-    { id: 1, title: "Task 1", description: "blah blah blah", completed: false },
-    { id: 2, title: "Task 2", description: "blah blah blah", completed: false },
-    { id: 3, title: "Task 3", description: "blah blah blah", completed: true },
-  ]);
+const TaskList = ({ tasks, completed, setAlert, refetch }) => {
   const [selectedTask, setSelectedTask] = useState({});
+  const [showCreateTaskModal, setShowCreateTaskModal] = useState(false);
   const [showEditTaskModal, setShowEditTaskModal] = useState(false);
   const [showDeleteTaskModal, setShowDeleteTaskModal] = useState(false);
 
-  const handleUpdateTask = async (id, completed) => {
-    console.log(`Update Task ID: ${id}`);
-    // Dummy function
+  const handleUpdateTaskCompletion = async (id, completed) => {
+    try {
+      await axios.put(`http://127.0.0.1:5000/tasks/${id}`, {
+        completed: !completed,
+      });
+      refetch();
+    } catch (error) {
+      setAlert({ variant: "danger", message: "There was an error getting tasks" });
+    }
   };
 
   //handles showing the edit task modal
   const handleShowEditTaskModal = async (task) => {
-    console.log("Edit Task: ", task);
     setSelectedTask(task);
     setShowEditTaskModal(true);
   };
@@ -35,11 +38,26 @@ const TaskList = ({ completed }) => {
 
   return (
     <>
+      {/* these are our modals for create, edit, and delete */}
+      {showCreateTaskModal && (
+        <CreateTaskModal
+          show={showCreateTaskModal}
+          handleClose={() => {
+            setShowCreateTaskModal(false);
+            refetch();
+          }}
+          setAlert={setAlert}
+        />
+      )}
       {showEditTaskModal && (
         <EditTaskModal
           task={selectedTask}
           show={showEditTaskModal}
-          handleClose={() => setShowEditTaskModal(false)}
+          handleClose={() => {
+            setShowEditTaskModal(false);
+            refetch();
+          }}
+          setAlert={setAlert}
         />
       )}
       {showDeleteTaskModal && (
@@ -47,6 +65,7 @@ const TaskList = ({ completed }) => {
           task={selectedTask}
           show={showDeleteTaskModal}
           handleClose={() => setShowDeleteTaskModal(false)}
+          setAlert={setAlert}
         />
       )}
       <ListGroup className="mt-3">
@@ -61,7 +80,7 @@ const TaskList = ({ completed }) => {
                 <Form.Check
                   type="checkbox"
                   checked={task.completed}
-                  onChange={() => handleUpdateTask(task.id)}
+                  onChange={() => handleUpdateTaskCompletion(task.id, completed)}
                   className="me-2"
                 />
                 {task.title} - {task.description}
@@ -79,6 +98,16 @@ const TaskList = ({ completed }) => {
               </div>
             </ListGroup.Item>
           ))}
+        {/* we only want to show create button if showing active tasks */}
+        {!completed && (
+          <Row className="mt-3">
+            <Col className="w-fit-content d-flex justify-content-end">
+              <Button variant="primary" onClick={() => setShowCreateTaskModal(true)}>
+                Create New Task
+              </Button>
+            </Col>
+          </Row>
+        )}
       </ListGroup>
     </>
   );
