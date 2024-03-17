@@ -1,8 +1,15 @@
+import axios from "axios";
 import { Modal, Button } from "react-bootstrap";
 
-export default function DeleteTaskModal({ task, show, handleClose }) {
-  const handleDelete = () => {
-    handleClose();
+export default function DeleteTaskModal({ task, show, handleClose, setAlert }) {
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://127.0.0.1:5000/tasks/${task.id}`);
+      handleClose();
+      setAlert({ variant: "success", message: "Task deleted successfully!" });
+    } catch (error) {
+      setAlert({ variant: "danger", message: "There was an error deleting tasks" });
+    }
   };
 
   return (

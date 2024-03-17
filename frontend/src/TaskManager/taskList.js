@@ -64,7 +64,10 @@ const TaskList = ({ tasks, completed, setAlert, refetch }) => {
         <DeleteTaskModal
           task={selectedTask}
           show={showDeleteTaskModal}
-          handleClose={() => setShowDeleteTaskModal(false)}
+          handleClose={() => {
+            setShowDeleteTaskModal(false);
+            refetch();
+          }}
           setAlert={setAlert}
         />
       )}
@@ -72,30 +75,31 @@ const TaskList = ({ tasks, completed, setAlert, refetch }) => {
         {tasks
           ?.filter((task) => task.completed === completed)
           ?.map((task) => (
-            <ListGroup.Item
-              key={task.id}
-              className="d-flex align-items-center justify-content-between"
-            >
-              <div className="d-flex align-items-center">
-                <Form.Check
-                  type="checkbox"
-                  checked={task.completed}
-                  onChange={() => handleUpdateTaskCompletion(task.id, completed)}
-                  className="me-2"
-                />
-                {task.title} - {task.description}
-              </div>
-              <div>
-                <EditIcon
-                  onClick={() => handleShowEditTaskModal(task)}
-                  style={{ cursor: "pointer" }}
-                  className="mx-3"
-                />
-                <DeleteIcon
-                  onClick={() => handleShowDeleteTaskModal(task)}
-                  style={{ cursor: "pointer" }}
-                />
-              </div>
+            <ListGroup.Item key={task.id} variant={completed && "secondary"}>
+              <Row>
+                <Col xs={1} md={1}>
+                  <Form.Check
+                    type="checkbox"
+                    checked={task.completed}
+                    onChange={() => handleUpdateTaskCompletion(task.id, completed)}
+                    className="me-2"
+                  />
+                </Col>
+                <Col xs={6} md={9}>
+                  <h5>{task.title}</h5>
+                </Col>
+                <Col xs={5} md={2} className="center">
+                  <EditIcon
+                    onClick={() => handleShowEditTaskModal(task)}
+                    style={{ cursor: "pointer" }}
+                    className="mx-3"
+                  />
+                  <DeleteIcon
+                    onClick={() => handleShowDeleteTaskModal(task)}
+                    style={{ cursor: "pointer" }}
+                  />
+                </Col>
+              </Row>
             </ListGroup.Item>
           ))}
         {/* we only want to show create button if showing active tasks */}

@@ -11,7 +11,7 @@ export default function TaskManager() {
   const handleFetchTasks = useCallback(async () => {
     try {
       const response = await axios.get("http://127.0.0.1:5000/tasks");
-      setTasks(response.data); // Success response
+      setTasks(response.data);
     } catch (error) {
       setAlert({ variant: "danger", message: "There was an error getting tasks" });
     }
