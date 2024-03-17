@@ -3,6 +3,7 @@ import { ListGroup, Form } from "react-bootstrap";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import EditTaskModal from "./editTaskModal";
+import DeleteTaskModal from "./deleteTaskModal";
 
 const TaskList = ({ completed }) => {
   const [tasks, setTasks] = useState([
@@ -12,21 +13,24 @@ const TaskList = ({ completed }) => {
   ]);
   const [selectedTask, setSelectedTask] = useState({});
   const [showEditTaskModal, setShowEditTaskModal] = useState(false);
+  const [showDeleteTaskModal, setShowDeleteTaskModal] = useState(false);
 
   const handleUpdateTask = async (id, completed) => {
     console.log(`Update Task ID: ${id}`);
     // Dummy function
   };
 
-  const handleEditTask = async (task) => {
+  //handles showing the edit task modal
+  const handleShowEditTaskModal = async (task) => {
     console.log("Edit Task: ", task);
     setSelectedTask(task);
     setShowEditTaskModal(true);
   };
 
-  const handleDeleteTask = async (taskId) => {
-    console.log(`Delete Task ID: ${taskId}`);
-    // Implement task deletion logic here
+  //handles showing the delete task modal
+  const handleShowDeleteTaskModal = async (task) => {
+    setSelectedTask(task);
+    setShowDeleteTaskModal(true);
   };
 
   return (
@@ -36,6 +40,13 @@ const TaskList = ({ completed }) => {
           task={selectedTask}
           show={showEditTaskModal}
           handleClose={() => setShowEditTaskModal(false)}
+        />
+      )}
+      {showDeleteTaskModal && (
+        <DeleteTaskModal
+          task={selectedTask}
+          show={showDeleteTaskModal}
+          handleClose={() => setShowDeleteTaskModal(false)}
         />
       )}
       <ListGroup className="mt-3">
@@ -57,12 +68,12 @@ const TaskList = ({ completed }) => {
               </div>
               <div>
                 <EditIcon
-                  onClick={() => handleEditTask(task)}
+                  onClick={() => handleShowEditTaskModal(task)}
                   style={{ cursor: "pointer" }}
                   className="mx-3"
                 />
                 <DeleteIcon
-                  onClick={() => handleDeleteTask(task.id)}
+                  onClick={() => handleShowDeleteTaskModal(task)}
                   style={{ cursor: "pointer" }}
                 />
               </div>
