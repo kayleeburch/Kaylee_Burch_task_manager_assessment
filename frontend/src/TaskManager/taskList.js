@@ -7,7 +7,7 @@ import EditTaskModal from "./taskModal";
 import CreateTaskModal from "./taskModal";
 import DeleteTaskModal from "./deleteTaskModal";
 
-const TaskList = ({ tasks, completed, setAlert, refetch }) => {
+const TaskList = ({ tasks, completed, setAlert, refetch, currentUser }) => {
   const token = localStorage.getItem("token");
   const [selectedTask, setSelectedTask] = useState({});
   const [showCreateTaskModal, setShowCreateTaskModal] = useState(false);
@@ -116,8 +116,8 @@ const TaskList = ({ tasks, completed, setAlert, refetch }) => {
               </Row>
             </ListGroup.Item>
           ))}
-        {/* we only want to show create button if showing active tasks */}
-        {!completed && (
+        {/* we only want to show create button if showing active tasks and a user is logged in */}
+        {!completed && currentUser?.id && (
           <Row className="mt-3">
             <Col className="w-fit-content d-flex justify-content-end">
               <Button variant="primary" onClick={() => setShowCreateTaskModal(true)}>

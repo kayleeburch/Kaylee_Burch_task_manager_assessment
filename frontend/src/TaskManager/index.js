@@ -19,9 +19,9 @@ export default function TaskManager({ currentUser }) {
       });
       setTasks(response.data);
     } catch (error) {
-      setAlert({ variant: "danger", message: "There was an error getting tasks" });
+      console.error("There was an error fetching the tasks", error);
     }
-  }, [setAlert]);
+  }, [token]);
 
   useEffect(() => {
     handleFetchTasks();
@@ -29,7 +29,7 @@ export default function TaskManager({ currentUser }) {
 
   return (
     <Container>
-      <LoginRegisterButtons />
+      <LoginRegisterButtons currentUser={currentUser} />
       <Header currentUser={currentUser} />
       {alert?.message && (
         <Row>
@@ -43,11 +43,23 @@ export default function TaskManager({ currentUser }) {
       <Row className="mt-3">
         <h3>Active Tasks: </h3>
       </Row>
-      <TaskList completed={false} tasks={tasks} setAlert={setAlert} refetch={handleFetchTasks} />
+      <TaskList
+        completed={false}
+        tasks={tasks}
+        setAlert={setAlert}
+        refetch={handleFetchTasks}
+        currentUser={currentUser}
+      />
       <Row className="mt-3">
         <h3>Completed Tasks:</h3>
       </Row>
-      <TaskList completed={true} tasks={tasks} setAlert={setAlert} refetch={handleFetchTasks} />
+      <TaskList
+        completed={true}
+        tasks={tasks}
+        setAlert={setAlert}
+        refetch={handleFetchTasks}
+        currentUser={currentUser}
+      />
     </Container>
   );
 }

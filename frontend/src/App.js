@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import TaskManager from "./TaskManager";
@@ -11,7 +11,7 @@ function App() {
   const token = localStorage.getItem("token");
   const [currentUser, setCurrentUser] = useState({});
 
-  const getCurrentUser = async () => {
+  const getCurrentUser = useCallback(async () => {
     try {
       const response = await axios.get("http://127.0.0.1:5000/current_user", {
         headers: {
@@ -22,11 +22,11 @@ function App() {
     } catch (error) {
       console.error(error);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     getCurrentUser();
-  }, []);
+  }, [getCurrentUser, token]);
 
   return (
     <Router>
