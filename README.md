@@ -3,4 +3,7 @@
 ## Project Start Up
 
 - This project is hosted on AWS Amplify - https://main.d2ui8ix1itvoud.amplifyapp.com/
-- Due to the db being sqlite, you will need to spin up the backend locally to save and manage your tasks as well as user login
+- Since the db is using a local sqlite, you will need to spin up the backend locally to save and manage your tasks as well as user login
+- create and set up a virtual environment if so desire
+- run pip install -r requirements.txt
+- run flask run
