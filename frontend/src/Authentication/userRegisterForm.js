@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Form, Button, Container } from "react-bootstrap";
+import { Form, Button, Container, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -15,8 +17,7 @@ function Register() {
         name,
         password,
       });
-      console.log(response.data);
-      // Handle success (e.g., navigate to login page)
+      navigate("/login");
     } catch (error) {
       console.error(error);
       // Handle error (e.g., display error message)
@@ -25,6 +26,9 @@ function Register() {
 
   return (
     <Container className="mt-5">
+      <Row>
+        <h3>Register</h3>
+      </Row>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="username">
           <Form.Label>Username</Form.Label>
