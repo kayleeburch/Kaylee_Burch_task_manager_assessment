@@ -8,6 +8,7 @@ import CreateTaskModal from "./taskModal";
 import DeleteTaskModal from "./deleteTaskModal";
 
 const TaskList = ({ tasks, completed, setAlert, refetch }) => {
+  const token = localStorage.getItem("token");
   const [selectedTask, setSelectedTask] = useState({});
   const [showCreateTaskModal, setShowCreateTaskModal] = useState(false);
   const [showEditTaskModal, setShowEditTaskModal] = useState(false);
@@ -15,12 +16,23 @@ const TaskList = ({ tasks, completed, setAlert, refetch }) => {
 
   const handleUpdateTaskCompletion = async (id, completed) => {
     try {
-      await axios.put(`http://127.0.0.1:5000/tasks/${id}`, {
-        completed: !completed,
-      });
+      await axios.put(
+        `http://127.0.0.1:5000/tasks/${id}`,
+        {
+          completed: !completed,
+        },
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
       refetch();
     } catch (error) {
-      setAlert({ variant: "danger", message: "There was an error getting tasks" });
+      setAlert({
+        variant: "danger",
+        message: "There was an error updating the task. Please try again.",
+      });
     }
   };
 
@@ -86,7 +98,9 @@ const TaskList = ({ tasks, completed, setAlert, refetch }) => {
                   />
                 </Col>
                 <Col xs={6} md={9}>
-                  <h5>{task.title}</h5>
+                  <h5>
+                    {task.title} - {task.description}
+                  </h5>
                 </Col>
                 <Col xs={5} md={2} className="center">
                   <EditIcon

@@ -2,9 +2,14 @@ import axios from "axios";
 import { Modal, Button } from "react-bootstrap";
 
 export default function DeleteTaskModal({ task, show, handleClose, setAlert }) {
+  const token = localStorage.getItem("token");
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/tasks/${task.id}`);
+      await axios.delete(`http://127.0.0.1:5000/tasks/${task.id}`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
       handleClose();
       setAlert({ variant: "success", message: "Task deleted successfully!" });
     } catch (error) {

@@ -2,15 +2,21 @@ import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { Container, Row, Col, Alert } from "react-bootstrap";
 import Header from "./header";
+import LoginRegisterButtons from "../Authentication/index.js";
 import TaskList from "./taskList.js";
 
-export default function TaskManager() {
+export default function TaskManager({ currentUser }) {
   const [alert, setAlert] = useState({});
   const [tasks, setTasks] = useState([]);
+  const token = localStorage.getItem("token");
 
   const handleFetchTasks = useCallback(async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:5000/tasks");
+      const response = await axios.get("http://127.0.0.1:5000/tasks", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
       setTasks(response.data);
     } catch (error) {
       setAlert({ variant: "danger", message: "There was an error getting tasks" });
@@ -23,7 +29,8 @@ export default function TaskManager() {
 
   return (
     <Container>
-      <Header />
+      <LoginRegisterButtons />
+      <Header currentUser={currentUser} />
       {alert?.message && (
         <Row>
           <Col className="mt-3">

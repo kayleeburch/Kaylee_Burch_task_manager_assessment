@@ -3,6 +3,7 @@ import { Modal, Form, Button } from "react-bootstrap";
 import axios from "axios";
 
 export default function TaskModal({ task, show, handleClose, setAlert }) {
+  const token = localStorage.getItem("token");
   const [editedTask, setEditedTask] = useState({});
 
   useEffect(() => {
@@ -20,7 +21,11 @@ export default function TaskModal({ task, show, handleClose, setAlert }) {
   const handleSave = async () => {
     if (!task?.id) {
       try {
-        const response = await axios.post("http://127.0.0.1:5000/tasks", editedTask);
+        await axios.post("http://127.0.0.1:5000/tasks", editedTask, {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        });
         handleClose();
         setAlert({ variant: "success", message: "Task created successfully!" });
       } catch (error) {
@@ -31,7 +36,11 @@ export default function TaskModal({ task, show, handleClose, setAlert }) {
       }
     } else {
       try {
-        const response = await axios.put(`http://127.0.0.1:5000/tasks/${task.id}`, editedTask);
+        await axios.put(`http://127.0.0.1:5000/tasks/${task.id}`, editedTask, {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        });
         handleClose();
         setAlert({ variant: "success", message: "Task updated successfully!" });
       } catch (error) {

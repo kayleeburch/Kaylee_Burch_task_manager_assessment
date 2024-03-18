@@ -1,10 +1,12 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required
 from app import db
 from app.models import Task
 
 tasks_bp = Blueprint('tasks', __name__)
 
 @tasks_bp.route('/tasks', methods=['GET', 'POST'])
+@jwt_required()
 def handle_tasks():
     if request.method == 'GET':
         tasks = Task.query.all()
@@ -16,18 +18,24 @@ def handle_tasks():
         db.session.commit()
         return jsonify({'message': 'Task created successfully.'}), 201
 
-# Add more routes here
+
 @tasks_bp.route('/tasks/<task_id>', methods=['PUT', 'DELETE'])
-def handle_task_by_id():
+@jwt_required()
+def handle_task_by_id(task_id):
     try:
-        data = request.get_json()
-        task = Task.query.get(data['id'])
-    except:
-        return jsonify({'message': 'Task not found.'}), 404
+        task = Task.query.get(task_id)
+        if task is None:
+            raise ValueError("Task not found")
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
     if request.method == 'PUT':
-        task.title = data['title']
-        task.description = data.get('description')
-        task.completed = data['completed']
+        data = request.get_json()
+        if 'title' in data:
+            task.title = data['title']
+        if 'description' in data:
+            task.description = data['description']
+        if 'completed' in data:
+            task.completed = data['completed']
         db.session.commit()
         return jsonify({'message': 'Task updated successfully.'}), 200
     elif request.method == 'DELETE':
