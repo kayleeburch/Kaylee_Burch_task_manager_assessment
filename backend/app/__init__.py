@@ -10,6 +10,9 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
+    from .controllers.tasks import tasks_bp
+    app.register_blueprint(tasks_bp)
+    
     CORS(app)
     db.init_app(app)
     
@@ -18,8 +21,4 @@ def create_app():
     with app.app_context():
         db.create_all()
     
-    # Move the import here
-    from .routes import bp  # Import the Blueprint here
-    app.register_blueprint(bp)  # Register the Blueprint with the app instance
-
     return app

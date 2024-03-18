@@ -7,8 +7,6 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/about" component={AboutPage} />
-          <Route path="/tasks" component={TaskManager} /> */}
         <Route path="/" element={<TaskManager />} />
       </Routes>
     </Router>
