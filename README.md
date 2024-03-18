@@ -17,8 +17,8 @@
 - Backend:
     This was my first attempt using Flask, my typical python framework is Django, but I had a lot of fun learning about Flask and seeing the difference between the two frameworks!
     I have two models:
-      1. Tasks
-      2. Users
+      - 1. Tasks
+      - 2. Users
     - Tasks has a foreign key to Users to connect a users tasks to them.
     - Inside of the controllers directory, I implemented routes using Flask's Blueprint to help with modularization and possible future scalability.
     - Something option I added but was helpful to me (and maybe this is simply because I am so used to Django) was Flask-Migrate to help me manage my Model changes and updated to the db structure.
@@ -27,6 +27,12 @@
     header Token.
   - on the front end of the site, we are setting the token in the user's local storage and passing to each endpoint to verify authorization.
   - For password hashing and management, I am using Werkzeug and am saving the hashed password on the user.
+ 
+- Hosting:
+  - I ended up using AWS Amplify for hosting the front end of the site, we could also use EC2 and we could even connect DynamoDB for our db.
+  - right now I have continuous deployments set up for whenever I push to my "staging" branch just due to the projects size.
+ 
+  Thanks for taking a look and please feel free to reach me at my email: kayleemburch@gmail.com if you have any questions or comments! Feedback is much appreciated!
   
   
   
